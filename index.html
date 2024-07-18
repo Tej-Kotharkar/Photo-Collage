@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Photo Collage</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"></script>
+    <style>
+        #camera {
+            width: 320px;
+            height: 240px;
+            margin: 20px;
+            border: 1px solid #ccc;
+        }
+        #photo-collage {
+            display: flex;
+            flex-wrap: wrap;
+            width: 320px;
+            height: 480px;
+            margin: 20px;
+            border: 1px solid #ccc;
+        }
+        .photo-large {
+            width: 100%;
+            height: 50%;
+        }
+        .photo-small {
+            width: 50%;
+            height: 50%;
+        }
+    </style>
+</head>
+<body>
+    <center>
+        <h2>Photo Collage Web App</h2>
+        <hr>
+        <h4>As soon as the popup comes, please click allow</h4>
+        <br><br>
+        <h1>Say "selfie" if you want to take a photo for the photo collage</h1>
+        <button onclick="startWebcam()" id="button" class="btn btn-info">Start</button>
+        <button onclick="takeSnapshot()" id="capture-button" class="btn btn-primary" style="display:none;">Take Photo</button>
+        <h4>Press the start button</h4>
+        <br>
+        <p>Your Webcam:</p>
+        <div id="camera"></div>
+        <br>
+        <p>Your selfie will be displayed here:</p>
+        <div id="photo-collage"></div>
+    </center>
+
+    <script>
+        let photoCount = 0;
+
+        function startWebcam() {
+            Webcam.set({
+                width: 320,
+                height: 240,
+                image_format: 'jpeg',
+                jpeg_quality: 90
+            });
+            Webcam.attach('#camera');
+            document.getElementById('capture-button').style.display = 'inline-block';
+        }
+
+        function takeSnapshot() {
+            if (photoCount >= 3) {
+                alert("Collage is limited to 3 photos.");
+                return;
+            }
+            Webcam.snap(function(data_uri) {
+                var img = document.createElement('img');
+                img.src = data_uri;
+                if (photoCount === 0) {
+                    img.classList.add('photo-large');
+                } else {
+                    img.classList.add('photo-small');
+                }
+                document.getElementById('photo-collage').appendChild(img);
+                photoCount++;
+            });
+        }
+    </script>
+</body>
+</html>
